@@ -1,0 +1,22 @@
+name: Deploy to GCP VM
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up SSH
+      uses: webfactory/ssh-agent@v0.5.3
+      with:
+        ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+
+    - name: Execute remote command
+      run: ssh -o StrictHostKeyChecking=no nikhil@3.144.126.101 'cd myapp && nohup ./start.sh > deploy.log 2>&1 &'
